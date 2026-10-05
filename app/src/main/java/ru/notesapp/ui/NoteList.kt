@@ -1,5 +1,6 @@
 package ru.notesapp.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,10 +9,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ru.notesapp.domain.Note
+import ru.notesapp.data.notes
 
 @Composable
-fun NoteList(notes: List<Note>, onClick: (Note) -> Unit, modifier: Modifier = Modifier) {
+fun NoteList(
+    modifier: Modifier = Modifier
+) {
     if (notes.isEmpty()) {
         EmptyState(
             title = "Пока нет заметок",
@@ -30,7 +33,11 @@ fun NoteList(notes: List<Note>, onClick: (Note) -> Unit, modifier: Modifier = Mo
             ) { note ->
                 NoteCard(
                     note = note,
-                    onClick = { onClick(note) })
+                    onClick = {
+                        Log.d("NotesApp", "Click: ${note.id}")
+
+                    }
+                )
             }
         }
     }

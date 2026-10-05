@@ -1,108 +1,71 @@
 package ru.notesapp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import ru.notesapp.domain.Note
-import ru.notesapp.domain.NoteType
-import ru.notesapp.domain.summary
-import ru.notesapp.ui.NoteList
+import androidx.compose.ui.tooling.preview.Preview
+import ru.notesapp.ui.NotesListScreen
 import ru.notesapp.ui.theme.NotesAppTheme
+import ru.notesapp.ui.theme.ThemeVariant
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val notes = listOf(
-            Note(
-                id = 1L,
-                title = "Покупки",
-                content = "Купить молоко, хлеб и сыр",
-                createdAt = System.currentTimeMillis(),
-                type = NoteType.Text
-            ),
-            Note(
-                id = 2L,
-                title = "Фото с прогулки",
-                content = "Фотография из парка",
-                createdAt = System.currentTimeMillis(),
-                type = NoteType.Image
-            ),
-            Note(
-                id = 3L,
-                title = "Идея для проекта",
-                content = "Сделать приложение для заметок на Kotlin",
-                createdAt = System.currentTimeMillis(),
-                type = NoteType.Text
-            ),
-            Note(
-                id = 4L,
-                title = "Голосовая заметка",
-                content = "Запись идеи для нового проекта",
-                createdAt = System.currentTimeMillis(),
-                type = NoteType.Audio
-            ),
-            Note(
-                id = 5L,
-                title = "Учёба",
-                content = "Повторить Compose и подготовиться к защите практики",
-                createdAt = System.currentTimeMillis(),
-                type = NoteType.Text
-            )
-        )
-
         setContent {
-            NotesAppTheme {
-                Scaffold { innerPadding ->
-                    NoteList(
-                        modifier = Modifier.padding(innerPadding),
-                        notes = notes,
-                        onClick = { note ->
-                            Log.d("NotesApp", "Clicked: ${note.id}")
-                        }
-                    )
-                }
+            NotesAppTheme(
+                themeVariant = ThemeVariant.PASTEL,
+                darkTheme = true
+            ) {
+                NotesListScreen()
             }
         }
     }
 }
 
+@Preview(name = "Pastel Light", showBackground = true)
 @Composable
-fun Greeting() {
-    val notes = listOf(
-        Note(
-            id = 1,
-            title = "Хлеб",
-            content = "Текст хлеб",
-            createdAt = System.currentTimeMillis(),
-            type = NoteType.Text
-        ),
-        Note(
-            id = 2,
-            title = "Хлеб",
-            content = "Картинка хлеб",
-            createdAt = System.currentTimeMillis(),
-            type = NoteType.Image
-        ),
-        Note(
-            id = 3,
-            title = "Хлеб",
-            content = "Аудио хлеб",
-            createdAt = System.currentTimeMillis(),
-            type = NoteType.Audio
-        ),
-    )
-    notes.forEach {
-        Log.d("HER", "HER")
-        Log.d("NotesApp", it.summary())
+private fun PastelLightPreview() {
+    NotesAppTheme(
+        darkTheme = false,
+        themeVariant = ThemeVariant.PASTEL
+    ) {
+        NotesListScreen()
     }
+}
 
+@Preview(name = "Pastel Dark", showBackground = true)
+@Composable
+private fun PastelDarkPreview() {
+    NotesAppTheme(
+        darkTheme = true,
+        themeVariant = ThemeVariant.PASTEL
+    ) {
+        NotesListScreen()
+    }
+}
+
+@Preview(name = "Forest Light", showBackground = true)
+@Composable
+private fun ForestLightPreview() {
+    NotesAppTheme(
+        darkTheme = false,
+        themeVariant = ThemeVariant.FOREST
+    ) {
+        NotesListScreen()
+    }
+}
+
+@Preview(name = "Forest Dark", showBackground = true)
+@Composable
+private fun ForestDarkPreview() {
+    NotesAppTheme(
+        darkTheme = true,
+        themeVariant = ThemeVariant.FOREST
+    ) {
+        NotesListScreen()
+    }
 }
