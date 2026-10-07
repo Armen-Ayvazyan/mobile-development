@@ -20,11 +20,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.launch
+import ru.notesapp.domain.Note
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotesListScreen() {
+fun NotesListScreen(
+    onNoteClick: (Note) -> Unit
+) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     val scope = rememberCoroutineScope()
@@ -78,7 +82,16 @@ fun NotesListScreen() {
         }
     ) { innerPadding ->
         NoteList(
+            onNoteClick = onNoteClick,
             modifier = Modifier.padding(innerPadding)
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NotesListScreenPreview() {
+    NotesListScreen(
+        onNoteClick = {}
+    )
 }

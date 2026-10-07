@@ -10,9 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.notesapp.data.notes
+import ru.notesapp.domain.Note
 
 @Composable
 fun NoteList(
+    onNoteClick: (Note) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (notes.isEmpty()) {
@@ -34,8 +36,8 @@ fun NoteList(
                 NoteCard(
                     note = note,
                     onClick = {
-                        Log.d("NotesApp", "Click: ${note.id}")
-
+//                        Log.d("NotesApp", "Click: ${note.id}")
+                        onNoteClick(note)
                     }
                 )
             }

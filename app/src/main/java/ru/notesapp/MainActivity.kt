@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import ru.notesapp.ui.NotesListScreen
+import ru.notesapp.ui.RootScreen
 import ru.notesapp.ui.theme.NotesAppTheme
 import ru.notesapp.ui.theme.ThemeVariant
 
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
                 themeVariant = ThemeVariant.PASTEL,
                 darkTheme = true
             ) {
-                NotesListScreen()
+                RootScreen()
             }
         }
     }
@@ -33,7 +33,7 @@ private fun PastelLightPreview() {
         darkTheme = false,
         themeVariant = ThemeVariant.PASTEL
     ) {
-        NotesListScreen()
+        RootScreen()
     }
 }
 
@@ -44,7 +44,7 @@ private fun PastelDarkPreview() {
         darkTheme = true,
         themeVariant = ThemeVariant.PASTEL
     ) {
-        NotesListScreen()
+        RootScreen()
     }
 }
 
@@ -55,7 +55,7 @@ private fun ForestLightPreview() {
         darkTheme = false,
         themeVariant = ThemeVariant.FOREST
     ) {
-        NotesListScreen()
+        RootScreen()
     }
 }
 
@@ -66,6 +66,6 @@ private fun ForestDarkPreview() {
         darkTheme = true,
         themeVariant = ThemeVariant.FOREST
     ) {
-        NotesListScreen()
+        RootScreen()
     }
 }
