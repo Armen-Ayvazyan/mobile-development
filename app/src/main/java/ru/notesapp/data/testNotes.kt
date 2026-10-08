@@ -3,7 +3,7 @@ package ru.notesapp.data
 import ru.notesapp.domain.Note
 import ru.notesapp.domain.NoteType
 
-val notes = listOf(
+val local_notes = listOf(
     Note(
         id = 1L,
         title = "Покупки",

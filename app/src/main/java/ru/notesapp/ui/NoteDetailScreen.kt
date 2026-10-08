@@ -21,10 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.notesapp.data.notes
+import ru.notesapp.data.local_notes
 import ru.notesapp.domain.Note
 import ru.notesapp.domain.NoteType
-import ru.notesapp.ui.theme.NotesAppTheme
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -34,7 +33,7 @@ fun NoteDetailScreen(
     noteId: Long,
     onBack: () -> Unit
 ) {
-    val note = notes.find { it.id == noteId }
+    val note = local_notes.find { it.id == noteId }
 
     Scaffold(
         topBar = {
