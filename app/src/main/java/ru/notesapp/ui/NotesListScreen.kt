@@ -31,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.notesapp.domain.Note
 import ru.notesapp.domain.NoteType
 import ru.notesapp.viewmodel.NotesUiState
@@ -40,8 +39,8 @@ import ru.notesapp.viewmodel.NotesViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotesListScreen(
-    onNoteClick: (Note) -> Unit,
-    viewModel: NotesViewModel = viewModel()
+    viewModel: NotesViewModel,
+    onNoteClick: (Note) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showAddDialog by remember { mutableStateOf(false) }
@@ -95,7 +94,7 @@ fun NotesListScreen(
                     ) {
                         Text(text = "Ошибка: ${s.message}")
                         Spacer(modifier = Modifier.height(8.dp))
-                        Button(onClick = { viewModel.loadNotes() }) {
+                        Button(onClick = { }) {
                             Text("Повторить")
                         }
                     }

@@ -11,21 +11,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import ru.notesapp.ui.navigation.Routes
 import ru.notesapp.ui.theme.ThemeVariant
+import ru.notesapp.viewmodel.NotesViewModel
 
 private data class BottomItem(
     val route: String,
@@ -33,134 +30,80 @@ private data class BottomItem(
     val icon: ImageVector
 )
 
+private val bottomItems = listOf(
+    BottomItem(Routes.NOTES, "Заметки", Icons.Default.Note),
+    BottomItem(Routes.SETTINGS, "Настройки", Icons.Default.Settings)
+)
+
 @Composable
-fun RootScreen() {
-
+fun RootScreen(
+    viewModel: NotesViewModel,
+    onThemeChange: (ThemeVariant) -> Unit = {},
+    currentTheme: ThemeVariant = ThemeVariant.PASTEL
+) {
     val navController = rememberNavController()
-
-    var currentTheme by remember {
-        mutableStateOf(ThemeVariant.PASTEL)
-    }
-
-    val bottomItems = listOf(
-        BottomItem(
-            route = Routes.NOTES,
-            title = "Заметки",
-            icon = Icons.Default.Note
-        ),
-        BottomItem(
-            route = Routes.SETTINGS,
-            title = "Настройки",
-            icon = Icons.Default.Settings
-        )
-    )
-
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
-
-    val currentRoute = currentBackStackEntry
-        ?.destination
-        ?.route
+    val currentRoute = currentBackStackEntry?.destination?.route
 
     Scaffold(
         bottomBar = {
-
-            if (currentRoute == Routes.NOTES ||
-                currentRoute == Routes.SETTINGS
-            ) {
-
+            // Нижняя панель навигации отображается только на главных экранах (notes и settings)[cite: 58, 59]
+            if (currentRoute in bottomItems.map { it.route }) {
                 NavigationBar {
-
                     bottomItems.forEach { item ->
-
                         NavigationBarItem(
                             selected = currentRoute == item.route,
-
                             onClick = {
-
                                 navController.navigate(item.route) {
-
-                                    popUpTo(
-                                        navController.graph.findStartDestination().id
-                                    ) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
                                         saveState = true
                                     }
-
                                     launchSingleTop = true
                                     restoreState = true
                                 }
                             },
-
-                            icon = {
-                                Icon(
-                                    imageVector = item.icon,
-                                    contentDescription = item.title
-                                )
-                            },
-
-                            label = {
-                                Text(item.title)
-                            }
+                            icon = { Icon(item.icon, contentDescription = item.title) },
+                            label = { Text(item.title) }
                         )
                     }
                 }
             }
         }
     ) { innerPadding ->
-
         NavHost(
             navController = navController,
             startDestination = Routes.NOTES,
             modifier = Modifier.padding(innerPadding)
         ) {
-
+            // Экран списка заметок[cite: 58]
             composable(Routes.NOTES) {
-
                 NotesListScreen(
+                    viewModel = viewModel,
                     onNoteClick = { note ->
-                        navController.navigate(
-                            Routes.note(note.id)
-                        )
+                        navController.navigate(Routes.note(note.id))
                     }
                 )
             }
 
+            // Экран подробной информации о заметке[cite: 58]
             composable(
                 route = Routes.NOTE,
-                arguments = listOf(
-                    navArgument("id") {
-                        type = NavType.LongType
-                    }
-                )
-            ) { entry ->
-
-                val id = entry.arguments
-                    ?.getLong("id")
-                    ?: -1L
-
+                arguments = listOf(navArgument("id") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val noteId = backStackEntry.arguments?.getLong("id") ?: -1L
                 NoteDetailScreen(
-                    noteId = id,
-                    onBack = {
-                        navController.popBackStack()
-                    }
+                    noteId = noteId,
+                    onBack = { navController.popBackStack() }
                 )
             }
 
+            // Экран настроек приложения[cite: 58]
             composable(Routes.SETTINGS) {
-
                 SettingsScreen(
-                    currentTheme = currentTheme,
-
-                    onThemeChange = { theme ->
-                        currentTheme = theme
-                    }
+                    onThemeChange = onThemeChange,
+                    currentTheme = currentTheme
                 )
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun RootScreenPreview() {
-    RootScreen()
 }
