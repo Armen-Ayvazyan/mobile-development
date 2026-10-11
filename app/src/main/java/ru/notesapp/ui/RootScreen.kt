@@ -22,7 +22,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ru.notesapp.ui.navigation.Routes
 import ru.notesapp.ui.theme.ThemeVariant
-import ru.notesapp.viewmodel.NotesViewModel
 
 private data class BottomItem(
     val route: String,
@@ -37,7 +36,6 @@ private val bottomItems = listOf(
 
 @Composable
 fun RootScreen(
-    viewModel: NotesViewModel,
     onThemeChange: (ThemeVariant) -> Unit = {},
     currentTheme: ThemeVariant = ThemeVariant.PASTEL
 ) {
@@ -76,7 +74,6 @@ fun RootScreen(
         ) {
             composable(Routes.NOTES) {
                 NotesListScreen(
-                    viewModel = viewModel,
                     onNoteClick = { note ->
                         navController.navigate(Routes.note(note.id))
                     }

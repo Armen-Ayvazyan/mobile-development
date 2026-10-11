@@ -1,8 +1,8 @@
 package ru.notesapp.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,13 +12,15 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.notesapp.data.SyncedNotesRepository
+import ru.notesapp.data.NotesRepository
 import ru.notesapp.data.remote.NetworkResult
 import ru.notesapp.domain.Note
 import ru.notesapp.domain.NoteType
+import javax.inject.Inject
 
-class NotesViewModel(
-    private val repository: SyncedNotesRepository
+@HiltViewModel
+class NotesViewModel @Inject constructor(
+    private val repository: NotesRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<NotesUiState>(NotesUiState.Loading)
@@ -94,16 +96,6 @@ class NotesViewModel(
             withContext(Dispatchers.IO) {
                 repository.delete(id)
             }
-        }
-    }
-
-    class Factory(private val repository: SyncedNotesRepository) : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(NotesViewModel::class.java)) {
-                return NotesViewModel(repository) as T
-            }
-            throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
 }

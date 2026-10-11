@@ -35,7 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import ru.notesapp.domain.Note
 import ru.notesapp.domain.NoteType
 import ru.notesapp.viewmodel.NotesUiState
@@ -45,7 +45,7 @@ import ru.notesapp.viewmodel.NotesViewModel
 @Composable
 fun NotesListScreen(
     onNoteClick: (Note) -> Unit,
-    viewModel: NotesViewModel = viewModel(),
+    viewModel: NotesViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
