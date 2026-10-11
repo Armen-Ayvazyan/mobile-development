@@ -47,7 +47,6 @@ fun RootScreen(
 
     Scaffold(
         bottomBar = {
-            // Нижняя панель навигации отображается только на главных экранах (notes и settings)[cite: 58, 59]
             if (currentRoute in bottomItems.map { it.route }) {
                 NavigationBar {
                     bottomItems.forEach { item ->
@@ -75,7 +74,6 @@ fun RootScreen(
             startDestination = Routes.NOTES,
             modifier = Modifier.padding(innerPadding)
         ) {
-            // Экран списка заметок[cite: 58]
             composable(Routes.NOTES) {
                 NotesListScreen(
                     viewModel = viewModel,
@@ -85,7 +83,6 @@ fun RootScreen(
                 )
             }
 
-            // Экран подробной информации о заметке[cite: 58]
             composable(
                 route = Routes.NOTE,
                 arguments = listOf(navArgument("id") { type = NavType.LongType })
@@ -97,7 +94,6 @@ fun RootScreen(
                 )
             }
 
-            // Экран настроек приложения[cite: 58]
             composable(Routes.SETTINGS) {
                 SettingsScreen(
                     onThemeChange = onThemeChange,
