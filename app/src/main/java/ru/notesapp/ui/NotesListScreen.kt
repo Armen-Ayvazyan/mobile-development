@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -45,6 +46,7 @@ import ru.notesapp.viewmodel.NotesViewModel
 @Composable
 fun NotesListScreen(
     onNoteClick: (Note) -> Unit,
+    onOpenGallery: () -> Unit = {},
     viewModel: NotesViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -65,6 +67,12 @@ fun NotesListScreen(
             TopAppBar(
                 title = { Text(text = "Заметки") },
                 actions = {
+                    IconButton(onClick = onOpenGallery) {
+                        Icon(
+                            imageVector = Icons.Default.PhotoLibrary,
+                            contentDescription = "Галерея"
+                        )
+                    }
                     if (isRefreshing) {
                         CircularProgressIndicator(
                             modifier = Modifier
@@ -128,8 +136,13 @@ fun NotesListScreen(
     if (showAddDialog) {
         AddNoteDialog(
             onDismiss = { showAddDialog = false },
-            onConfirm = { title, content ->
-                viewModel.addNote(title, content, NoteType.Text)
+            onConfirm = { title, content, imageUrl ->
+                viewModel.addNote(
+                    title = title,
+                    content = content,
+                    type = if (imageUrl.isNotBlank()) NoteType.Image else NoteType.Text,
+                    imageUrl = imageUrl.ifBlank { null }
+                )
                 showAddDialog = false
             }
         )
@@ -139,10 +152,11 @@ fun NotesListScreen(
 @Composable
 private fun AddNoteDialog(
     onDismiss: () -> Unit,
-    onConfirm: (title: String, content: String) -> Unit
+    onConfirm: (title: String, content: String, imageUrl: String) -> Unit
 ) {
     var title by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
+    var imageUrl by remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -163,11 +177,19 @@ private fun AddNoteDialog(
                     label = { Text("Содержание") },
                     modifier = Modifier.fillMaxWidth()
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = imageUrl,
+                    onValueChange = { imageUrl = it },
+                    label = { Text("URL изображения") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         },
         confirmButton = {
             Button(
-                onClick = { onConfirm(title, content) },
+                onClick = { onConfirm(title, content, imageUrl) },
                 enabled = title.isNotBlank()
             ) {
                 Text(text = "Сохранить")

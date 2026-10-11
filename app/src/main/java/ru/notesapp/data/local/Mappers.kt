@@ -7,7 +7,8 @@ fun NoteEntity.toDomain(): Note = Note(
     title = title,
     content = content,
     createdAt = createdAt,
-    type = type
+    type = type,
+    imageUrl = imageUrl
 )
 
 fun Note.toEntity(): NoteEntity = NoteEntity(
@@ -16,5 +17,6 @@ fun Note.toEntity(): NoteEntity = NoteEntity(
     content = content,
     createdAt = createdAt,
     updatedAt = System.currentTimeMillis(),
-    type = type
+    type = type,
+    imageUrl = imageUrl
 )

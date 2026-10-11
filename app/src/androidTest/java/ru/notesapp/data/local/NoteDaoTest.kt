@@ -2,6 +2,7 @@ package ru.notesapp.data.local
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.testing.MigrationTestHelper
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -137,6 +138,28 @@ class NoteDaoTest {
                 assertTrue(cursor.moveToFirst())
                 assertEquals("старая заметка", cursor.getString(0))
                 assertEquals(0L, cursor.getLong(1))
+            }
+            close()
+        }
+    }
+
+    @Test
+    fun migration2To3_addsImageUrlColumn() {
+        val dbName = "migration-2-3-test.db"
+
+        migrationHelper.createDatabase(dbName, 2).apply {
+            execSQL(
+                "INSERT INTO notes (id, title, content, created_at, updated_at, type) " +
+                    "VALUES (1, 'заметка без картинки', 'текст', 100, 0, 'TEXT')"
+            )
+            close()
+        }
+
+        migrationHelper.runMigrationsAndValidate(dbName, 3, true, MIGRATION_2_3).apply {
+            query("SELECT title, image_url FROM notes WHERE id = 1").use { cursor ->
+                assertTrue(cursor.moveToFirst())
+                assertEquals("заметка без картинки", cursor.getString(0))
+                assertTrue(cursor.isNull(1))
             }
             close()
         }

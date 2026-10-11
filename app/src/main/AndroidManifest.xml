@@ -14,6 +14,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NotesApp">
+
+        <!-- Регистрация AppGlideModule без кодогенерации (фолбэк Glide) -->
+        <meta-data
+            android:name="ru.notesapp.NotesAppGlideModule"
+            android:value="GlideModule" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

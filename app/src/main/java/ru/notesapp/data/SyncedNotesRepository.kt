@@ -30,8 +30,12 @@ class SyncedNotesRepository @Inject constructor(
     override suspend fun add(note: Note): NetworkResult<Long> = safeApiCall {
         val dto = note.toDto()
         val created = api.createPost(dto)
-        val entity =
-            created.toEntity().copy(type = note.type, title = note.title, content = note.content)
+        val entity = created.toEntity().copy(
+            type = note.type,
+            title = note.title,
+            content = note.content,
+            imageUrl = note.imageUrl
+        )
         dao.insert(entity)
     }
 

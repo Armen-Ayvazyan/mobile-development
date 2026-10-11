@@ -76,8 +76,13 @@ fun RootScreen(
                 NotesListScreen(
                     onNoteClick = { note ->
                         navController.navigate(Routes.note(note.id))
-                    }
+                    },
+                    onOpenGallery = { navController.navigate(Routes.GALLERY) }
                 )
+            }
+
+            composable(Routes.GALLERY) {
+                PhotoGalleryScreen(onBack = { navController.popBackStack() })
             }
 
             composable(

@@ -75,7 +75,12 @@ class NotesViewModel @Inject constructor(
         }
     }
 
-    fun addNote(title: String, content: String, type: NoteType) {
+    fun addNote(
+        title: String,
+        content: String,
+        type: NoteType,
+        imageUrl: String? = null
+    ) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val newNote = Note(
@@ -84,7 +89,7 @@ class NotesViewModel @Inject constructor(
                     content = content,
                     createdAt = System.currentTimeMillis(),
                     type = type,
-                    imageUrl = null
+                    imageUrl = imageUrl
                 )
                 repository.add(newNote)
             }
